@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
     marginTop: 30,
   },
   text_footer: {
-    color: '#05375a',
+    color: '#4bff72',
     fontSize: 18,
   },
   action: {
@@ -35,14 +35,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
 
     borderWidth: 1,
-    borderColor: '#420475',
+    borderColor: '#4bff72',
     borderRadius: 50,
   },
   textInput: {
     flex: 1,
     marginTop: -12,
 
-    color: '#05375a',
+    color: '#000',
   },
   loginContainer: {
     backgroundColor: '#fff',
@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   text_header: {
-    color: '#420475',
+    color: '#ff4b4b',
     fontWeight: 'bold',
     fontSize: 30,
   },
@@ -69,14 +69,14 @@ const styles = StyleSheet.create({
   },
   inBut: {
     width: '70%',
-    backgroundColor: '#420475',
+    backgroundColor: '#ff4b4b',
     alignItems: 'center',
     paddingHorizontal: 15,
     paddingVertical: 15,
     borderRadius: 50,
   },
   inBut2: {
-    backgroundColor: '#420475',
+    backgroundColor: '#4bff72',
     height: 65,
     width: 65,
     borderRadius: 15,
@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  smallIcons2: { // Corrected property name
+  smallIcons2: { 
     fontSize: 40,
     // marginRight: 10,
   },

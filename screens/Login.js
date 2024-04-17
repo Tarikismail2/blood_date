@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect,useState } from 'react';
 import { View, Text, Image, TextInput, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import styles from './style';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import local from './key';
 
 const Login = () => {
     const navigation = useNavigation();
@@ -11,44 +13,64 @@ const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const handleLogin = () => {
-        const userData = { email: email, password: password };
-        axios.post('http://192.168.43.8:5001/login', userData)
-            .then((res) => {
-                if (res.data.status === 'ok') {
-                    const redirectTo = res.data.redirectTo;
-                    // Naviguer vers la page spécifiée
-                    navigation.navigate(redirectTo);
-                } else {
-                    console.log(res.data.data);
-                }
-            })
-            .catch((err) => {
-                console.log(err);
-            });
-    };
+    function handleLogin() {
+        console.log(email, password);
+        const userData = {
+          email: email,
+          password,
+        };
+      
+        axios.post(local+'/login-user', userData)
+          .then(res => {
+            console.log(res.data.data);
+            if (res.data.status === 'ok') { // Fixed the comparison operator
+              Alert.alert('Logged In Successfully');
+              console.log(res.data.data);
+              console.log(res.data.data);
+              AsyncStorage.setItem('token', res.data.data);
+              AsyncStorage.setItem('isLoggedIn', JSON.stringify(true));
+              navigation.navigate('Home');
+            } 
+          })
+          .catch(error => {
+            console.error('Error during login:', error);
+          });
+      }
+      
+    //   console.log(AsyncStorage);
+      async function getData() {
+        const data = await AsyncStorage.getItem('isLoggedIn');
+        
+        console.log(data, 'at app.jsx');
+      
+      }
+      useEffect(()=>{
+        getData();
+        console.log("Hii");
+      },[])
+
 
     return (
-        <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false}>
-            <View>
+        <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps={"always"}>
+            <View  style={{backgroundColor: 'white'}}>
                 <View style={styles.logoContainer}>
                     <Image style={styles.logo} source={require('../assets/login_images.jpg')} />
                 </View>
                 <View style={styles.loginContainer}>
                     <Text style={styles.text_header}>Login !!!</Text>
                     <View style={styles.action}>
-                        <FontAwesome name="user-o" color="#420475" style={styles.smallIcon} />
+                        <FontAwesome name="user-o" color="#4bff72" style={styles.smallIcon} />
                         <TextInput placeholder="Email" style={styles.textInput} onChangeText={setEmail} />
                     </View>
                     <View style={styles.action}>
-                        <FontAwesome name="lock" color="#420475" style={styles.smallIcon} />
+                        <FontAwesome name="lock" color="#4bff72" style={styles.smallIcon} />
                         <TextInput placeholder="Password" style={styles.textInput} secureTextEntry={true} onChangeText={setPassword} />
                     </View>
                     <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')}>
                         <View
                             style={{ justifyContent: 'flex-end', alignItems: 'flex-end', marginTop: 8, marginRight: 10 }}
                         >
-                            <Text style={{ color: '#420475', fontWeight: '700' }}>
+                            <Text style={{ color: '#ff4b4b', fontWeight: '700' }}>
                                 Forget Password
                             </Text>
                         </View>
@@ -72,7 +94,7 @@ const Login = () => {
                         alignItems: 'center',
                     }}>
                         <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-                            <Text style={{ color: '#420475', fontWeight: 'bold', fontSize: 25, }} >Sign Up</Text>
+                            <Text style={{ color: '#ff4b4b', fontWeight: 'bold', fontSize: 25, }} >Sign Up</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
