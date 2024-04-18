@@ -6,6 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import local from './key';
 import axios from 'axios';
 import { StyleSheet } from 'react-native';
+import checkAvailability from './checkAvailibility';
 
 const Bookappointment = () => {
     const [selectedCenter, setSelectedCenter] = useState('');
@@ -45,6 +46,7 @@ const Bookappointment = () => {
                 centerName: selectedCenter,
                 timeSlot: selectedTimeSlot,
                 date: selectedDate,
+                status: 'en cours' // Ajout de l'état de validation
             });
             Alert.alert(response.data.message);
         } catch (error) {
@@ -52,6 +54,7 @@ const Bookappointment = () => {
             Alert.alert('Une erreur lors de la prise de rendez-vous. Veuillez réessayer.');
         }
     };
+    
 
     return (
         <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps={"always"}>

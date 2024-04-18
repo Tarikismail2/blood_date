@@ -5,6 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import local from './key';
 import { StyleSheet } from "react-native";
 import {getSlotLabel} from './slot'
+import { FontAwesome } from '@expo/vector-icons';
 
 const Myappointments = () => {
     const [appointments, setAppointments] = useState([]);
@@ -29,6 +30,17 @@ const Myappointments = () => {
         getData();
     }, []);
 
+    // Fonction pour rendre l'icône en fonction du statut
+    const renderStatusIcon = (status) => {
+        if (status.toLowerCase() === 'valider') {
+            return <FontAwesome name="check-circle" size={24} color="green" />;
+        } else if (status.toLowerCase() === 'non valider') {
+            return <FontAwesome name="times-circle" size={24} color="red" />;
+        } else {
+            return <FontAwesome name="circle" size={24} color="orange" />;
+        }
+    };
+
     return (
         <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps={"always"}>
         <View style={styles.container}>
@@ -47,6 +59,11 @@ const Myappointments = () => {
                         <Text style={styles.label}>Heure :</Text>
                         <Text style={styles.value}>{appointment.time_slot}</Text>
                     </View>
+                    <View style={styles.appointmentInfo}>
+                    <Text style={styles.label}>Etat :</Text>
+                    {renderStatusIcon(appointment.status)}
+                    <Text style={styles.value}>{appointment.status}</Text>
+                </View>
                 </View>
             ))}
         </View>

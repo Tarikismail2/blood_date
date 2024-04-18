@@ -63,7 +63,7 @@ const App = () => {
         console.error('Error retrieving token:', error);
         setIsLoggedIn(false);
       } finally {
-        SplashScreen.hide();
+        // SplashScreen.hide();
       }
     };
     getToken();
