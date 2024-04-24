@@ -1,11 +1,11 @@
 import React, { useEffect,useState } from 'react';
 import { View, Text, Image, TextInput, TouchableOpacity, ScrollView, Alert } from 'react-native';
-import styles from './style';
+import styles from '../style/style';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import local from './key';
+import local from '../config/key';
 
 const Login = () => {
     const navigation = useNavigation();
@@ -13,51 +13,44 @@ const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    function handleLogin() {
+    const handleLogin = () => {
         console.log(email, password);
         const userData = {
-          email: email,
-          password,
+            email: email,
+            password: password,
         };
-      
-        axios.post(local+'/login-user', userData)
-          .then(res => {
-            console.log(res.data.data);
-            if (res.data.status === 'ok') { // Fixed the comparison operator
-              Alert.alert('Logged In Successfully');
-              console.log(res.data.data);
-              console.log(res.data.data);
-              AsyncStorage.setItem('token', res.data.data);
-              AsyncStorage.setItem('isLoggedIn', JSON.stringify(true));
-              navigation.navigate('Home');
-            } 
-          })
-          .catch(error => {
-            console.error('Error during login:', error);
-          });
-      }
-      
-    //   console.log(AsyncStorage);
-      async function getData() {
-        const data = await AsyncStorage.getItem('isLoggedIn');
-        
-        console.log(data, 'at app.jsx');
-      
-      }
-      useEffect(()=>{
-        getData();
-        console.log("Hii");
-      },[])
-
+    
+        axios.post(local + '/users/login-user', userData)
+            .then(res => {
+                console.log(res.data.data);
+                if (res.data.status === 'ok') {
+                    Alert.alert('Logged In Successfully');
+                    AsyncStorage.setItem('token', res.data.data);
+                    AsyncStorage.setItem('isLoggedIn', JSON.stringify(true));
+                    navigateToCorrectPage();
+                }
+            })
+            .catch(error => {
+                console.log('Error during login:', error);
+                Alert.alert('Error', 'An error occurred during login');
+            });
+    };
+    
+    const navigateToCorrectPage = () => {
+        const adminEmail = 'admin@gmail.com';
+        const destination = email === adminEmail ? 'Accueil' : 'Home';
+        navigation.navigate(destination);
+    };
+    
 
     return (
         <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps={"always"}>
             <View  style={{backgroundColor: 'white'}}>
                 <View style={styles.logoContainer}>
-                    <Image style={styles.logo} source={require('../assets/login_images.jpg')} />
+                    <Image style={styles.logo} source={require('../../assets/login_images.jpg')} />
                 </View>
                 <View style={styles.loginContainer}>
-                    <Text style={styles.text_header}>Login !!!</Text>
+                    <Text style={styles.text_header}>Login </Text>
                     <View style={styles.action}>
                         <FontAwesome name="user-o" color="#4bff72" style={styles.smallIcon} />
                         <TextInput placeholder="Email" style={styles.textInput} onChangeText={setEmail} />

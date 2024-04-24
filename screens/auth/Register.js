@@ -1,11 +1,11 @@
 import React, { useEffect,useState } from 'react';
 import { View, Text, Image, TextInput, TouchableOpacity, ScrollView, Alert } from 'react-native';
-import styles from './style';
+import styles from '../style/style';
 import Feather from 'react-native-vector-icons/Feather';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
-import local from './key';
+import local from '../config/key';
 
 const Register = () => {
     const navigation = useNavigation();
@@ -20,7 +20,7 @@ const Register = () => {
                 mobile: mobile,
                 password: password
             };
-            axios.post(local+'/register', userData)
+            axios.post(local+'/users/register', userData)
                 .then((res) => {
                     if (res.data.status === 'ok') {
                         Alert.alert('Sign in successful');
@@ -69,7 +69,7 @@ const Register = () => {
     //Validation du numéro de mobile
     function handleMobile(text) {
         setMobile(text);
-        const isValidPhoneNumber = /d{10}$/.test(text);
+        const isValidPhoneNumber = /^\d{10}$/.test(text);
         setMobileVerify(isValidPhoneNumber);
     }     
     //Validation du mot de passe
@@ -86,10 +86,10 @@ const Register = () => {
         <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false}>
             <View>
                 <View style={styles.logoContainer}>
-                    <Image style={styles.logo} source={require('../assets/register_images.png')} />
+                    <Image style={styles.logo} source={require('../../assets/register_images.png')} />
                 </View>
                 <View style={styles.loginContainer}>
-                    <Text style={styles.text_header}>Register !!!</Text>
+                    <Text style={styles.text_header}>Register</Text>
 
                     <View style={styles.action}>
                         <FontAwesome name="user" color="#4bff72" style={styles.smallIcon} />

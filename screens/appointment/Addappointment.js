@@ -3,25 +3,39 @@ import { View, Text, Button, Alert, ScrollView } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { Calendar } from 'react-native-calendars';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import local from './key';
+import local from '../config/key';
 import axios from 'axios';
 import { StyleSheet } from 'react-native';
-import checkAvailability from './checkAvailibility';
 
-const Bookappointment = () => {
+const Addappointment = () => {
     const [selectedCenter, setSelectedCenter] = useState('');
-    const [selectedTimeSlot, setSelectedTimeSlot] = useState('');
+    const [selectedslotId, setSelectedslotId] = useState('');
     const [selectedDate, setSelectedDate] = useState('');
     const [userData, setUserData] = useState('');
+    const [centers, setCenters] = useState([]);
+    const [slots, setSlots] = useState([]);
+
 
     async function getData() {
-        const token = await AsyncStorage.getItem('token');
-        console.log(token);
-        axios.post(local + '/userdata', { token: token })
-            .then(res => {
-                console.log("valeur 1 = " + res.data.data);
+            const token = await AsyncStorage.getItem('token');
+            console.log(token);
+            axios.post(local + '/users/userdata', { token: token })
+              .then(res => {
+                console.log("valeur1 = " + res.data.data);
                 setUserData(res.data.data);
                 console.log(res.data.data);
+              });
+        // Récupérer les données des centres de santé depuis la base de données
+        axios.get(local + '/centers/find_center')
+            .then(res => {
+                setCenters(res.data);
+                console.log(res.data);
+            });
+        // Récupérer les données des créneaux horaires depuis la base de données
+        axios.get(local + '/slots/find_slots')
+            .then(res => {
+                setSlots(res.data);
+                console.log(res.data);
             });
     }
 
@@ -30,25 +44,35 @@ const Bookappointment = () => {
     }, []);
 
     const handleAppointmentBooking = async () => {
-        if (!selectedCenter || !selectedTimeSlot || !selectedDate) {
+        if (!selectedCenter || !selectedslotId || !selectedDate) {
             Alert.alert('Veuillez choisir un centre de santé, une date et un créneau horaire.');
             return;
         }
         try {
-            const isAvailable = await checkAvailability(selectedCenter, selectedTimeSlot, selectedDate);
-            console.log(isAvailable);
-            if (!isAvailable) {
-                Alert.alert('Ce creneau horaire est déjà réservé. Veuillez choisir un autre créneau.');
-                return;
-            }
-            const response = await axios.post(local + '/book-appointment', {
-                userId: userData.id,
-                centerName: selectedCenter,
-                timeSlot: selectedTimeSlot,
-                date: selectedDate,
-                status: 'en cours' // Ajout de l'état de validation
+            const response = await axios.post(local + '/appointments/count-appointments', {
+                centerId: selectedCenter,
+                slotId: selectedslotId,
+                date: selectedDate
             });
-            Alert.alert(response.data.message);
+            // console.log("centerId : "+selectedCenter);
+            // console.log("cslotId : "+selectedslotId);
+            const { count } = response.data;
+            const center = centers.find(center => center.id === selectedCenter);
+            console.log(center.capacity);
+            console.log("count : "+count);
+            if (count < center.capacity) {
+                // Effectuer la création du rendez-vous
+                const appointmentResponse = await axios.post(local + '/appointments/Add-appointment', {
+                    userId: userData.id,
+                    centerId: selectedCenter, 
+                    slotId: selectedslotId,
+                    date: selectedDate,
+                    status: 'en cours'
+                });
+                Alert.alert(appointmentResponse.data.message);
+            } else {
+                Alert.alert('Ce créneau horaire est déjà réservé ou complet. Veuillez choisir un autre créneau.');
+            }
         } catch (error) {
             console.error('Error during appointment booking:', error);
             Alert.alert('Une erreur lors de la prise de rendez-vous. Veuillez réessayer.');
@@ -71,25 +95,19 @@ const Bookappointment = () => {
                     onValueChange={(itemValue) => setSelectedCenter(itemValue)}
                     style={styles.picker}
                 >
-                    <Picker.Item label="Centre de santé 1" value="center1" />
-                    <Picker.Item label="Centre de santé 2" value="center2" />
-                    <Picker.Item label="Centre de santé 3" value="center3" />
-                    <Picker.Item label="Centre de santé 4" value="center4" />
-                    <Picker.Item label="Centre de santé 5" value="center5" />
-                    <Picker.Item label="Centre de santé 6" value="center6" />
+                    {centers.map(center => (
+                        <Picker.Item key={center.id} label={center.center_name} value={center.id} />
+                    ))}
                 </Picker>
                 <Text style={styles.title}>Choisissez un créneau horaire :</Text>
                 <Picker
-                    selectedValue={selectedTimeSlot}
-                    onValueChange={(itemValue) => setSelectedTimeSlot(itemValue)}
+                    selectedValue={selectedslotId}
+                    onValueChange={(itemValue) => setSelectedslotId(itemValue)}
                     style={styles.picker}
                 >
-                    <Picker.Item label="9:00 - 10:00" value="slot1" />
-                    <Picker.Item label="10:00 - 11:00" value="slot2" />
-                    <Picker.Item label="11:00 - 12:00" value="slot3" />
-                    <Picker.Item label="15:00 - 16:00" value="slot4" />
-                    <Picker.Item label="16:00 - 17:00" value="slot5" />
-                    <Picker.Item label="17:00 - 18:00" value="slot6" />
+                    {slots.map(slot => (
+                        <Picker.Item key={slot.id} label={slot.label} value={slot.id} />
+                    ))}
                 </Picker>
                 <Button title="Prendre rendez-vous" onPress={handleAppointmentBooking} />
             </View>
@@ -120,4 +138,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default Bookappointment;
+export default Addappointment;
