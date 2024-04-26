@@ -6,8 +6,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import local from '../config/key';
 import axios from 'axios';
 import { StyleSheet } from 'react-native';
+import { DrawerActions, useNavigation } from '@react-navigation/native';
 
 const Addappointment = () => {
+    const navigation = useNavigation();
     const [selectedCenter, setSelectedCenter] = useState('');
     const [selectedslotId, setSelectedslotId] = useState('');
     const [selectedDate, setSelectedDate] = useState('');
@@ -23,15 +25,14 @@ const Addappointment = () => {
               .then(res => {
                 console.log("valeur1 = " + res.data.data);
                 setUserData(res.data.data);
-                console.log(res.data.data);
               });
-        // Récupérer les données des centres de santé depuis la base de données
+
         axios.get(local + '/centers/find_center')
             .then(res => {
                 setCenters(res.data);
                 console.log(res.data);
             });
-        // Récupérer les données des créneaux horaires depuis la base de données
+
         axios.get(local + '/slots/find_slots')
             .then(res => {
                 setSlots(res.data);
@@ -61,7 +62,7 @@ const Addappointment = () => {
             console.log(center.capacity);
             console.log("count : "+count);
             if (count < center.capacity) {
-                // Effectuer la création du rendez-vous
+               
                 const appointmentResponse = await axios.post(local + '/appointments/Add-appointment', {
                     userId: userData.id,
                     centerId: selectedCenter, 
@@ -70,6 +71,7 @@ const Addappointment = () => {
                     status: 'en cours'
                 });
                 Alert.alert(appointmentResponse.data.message);
+                navigation.navigate("Mes RDVs");
             } else {
                 Alert.alert('Ce créneau horaire est déjà réservé ou complet. Veuillez choisir un autre créneau.');
             }

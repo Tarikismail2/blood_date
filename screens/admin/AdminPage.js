@@ -36,7 +36,6 @@ const AdminPage = ({ navigation }) => {
         console.error('Error fetching centers:', error);
       }
     };
-
     fetchCenters();
   }, []);
 
@@ -53,10 +52,8 @@ const AdminPage = ({ navigation }) => {
     } catch (error) {
       console.error('Error deleting center:', error);
       if (error.response && error.response.data && error.response.data.message) {
-        // Afficher le message d'erreur provenant de l'API
         Alert.alert('Error', error.response.data.message);
       } else {
-        // Afficher un message générique en cas d'erreur inattendue
         Alert.alert('Error', 'An unexpected error occurred while deleting the center.');
       }
     }

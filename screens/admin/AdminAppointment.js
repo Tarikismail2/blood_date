@@ -39,10 +39,10 @@ const AdminAppointment = () => {
     const renderAppointmentItem = ({ item }) => {
         return (
             <View style={styles.appointmentItem}>
-                <Text>User Name: {item.User.firstName}  {item.User.lastName}</Text>
-                <Text>Center Name: {item.Center.center_name}</Text>
+                <Text>User Name: {item?.User?.firstName}  {item?.User?.lastName}</Text>
+                <Text>Center Name: {item?.Center?.center_name}</Text>
                 <Text>Date: {item.date}</Text>
-                <Text>Time Slot: {item.SlotLabel.label}</Text>
+                <Text>Time Slot: {item?.SlotLabel?.label}</Text>
                 <Text>Status: {item.status}</Text>
                 <View style={styles.statusButtons}>
                     <TouchableOpacity onPress={() => handleUpdateStatus(item.id, 'Valider')}>

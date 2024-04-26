@@ -11,7 +11,6 @@ const Register = () => {
     const navigation = useNavigation();
 
     const handleRegister = () => {
-        // Vérifier si toutes les conditions de validation sont remplies
         if (firstNameVerify && lastNameVerify && emailVerify && mobileVerify && passwordVerify) {
             const userData = {
                 firstName: firstName,
@@ -49,30 +48,30 @@ const Register = () => {
     const [password, setPassword] = useState("");
     const [passwordVerify, setPasswordVerify] = useState(false);
 
-    //valiation du firstName
+
     function handleFirstName(text) {
         setFirstName(text);
         setFirstNameVerify(text.length > 2);
     }
-    //valiation du lastName
+
     function handleLastName(text) {
         setlastName(text);
         setLastNameVerify(text.length > 2);
     }
-    //validation de  l'adresse email
+ 
     function handleEmail(text) {
         setEmail(text);
         const emailStructure = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         const isValidEmail = emailStructure.test(text);
         setEmailVerify(isValidEmail);
     } 
-    //Validation du numéro de mobile
+
     function handleMobile(text) {
         setMobile(text);
         const isValidPhoneNumber = /^\d{10}$/.test(text);
         setMobileVerify(isValidPhoneNumber);
     }     
-    //Validation du mot de passe
+ 
     function handlePassword(text) {
         setPassword(text);
         if (text.length > 5) {

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import { View, TextInput, Button, StyleSheet, Alert,Text } from 'react-native';
 import axios from 'axios';
 import local from '../config/key';
 import { useNavigation } from '@react-navigation/native';
@@ -33,7 +33,9 @@ const AdminCenter = () => {
 
     return (
         <View style={styles.container}>
-            {/* <Text style={styles.title}>Ajouter un Centre</Text> */}
+            <View>
+            <Text style={styles.title}>Ajouter un Centre</Text>
+            </View>
             <TextInput 
                 style={styles.input} 
                 placeholder="Nom du centre" 

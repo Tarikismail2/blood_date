@@ -25,12 +25,12 @@ const AppNavigation = () => {
         if (email) {
           await AsyncStorage.setItem('email', email);
         } else {
-          console.warn('Attempted to save null or undefined email');
+          console.log('Attempted to save null or undefined email');
         }
         console.log('email:', email)
         setIsAdmin(email === 'admin@gmail.com');
       } catch (error) {
-        console.error('Error retrieving token:', error);
+        console.log('Error retrieving token:', error);
         setIsLoggedIn(false);
       }
     };

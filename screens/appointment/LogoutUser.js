@@ -34,10 +34,10 @@ const LogoutUser = () => {
 
     const handleLogout = async () => {
         try {
-            const token = await AsyncStorage.getItem('token'); // Récupérer le token
+            const token = await AsyncStorage.getItem('token');
 
             const response = await axios.post(local + '/users/logout', null, {
-                headers: { Authorization: `Bearer ${token}` }, // Inclure le token dans les en-têtes
+                headers: { Authorization: `Bearer ${token}` },
             });
 
             if (response.status === 200) {
@@ -99,7 +99,6 @@ const LogoutUser = () => {
     );
 };
 
-// Composant pour afficher les informations utilisateur
 const UserInfo = ({ icon, label, value }) => {
     return (
         <SafeAreaView style={styles.infoMain}>
@@ -168,7 +167,7 @@ const styles = StyleSheet.create({
         fontSize: 28,
 
         fontStyle: 'normal',
-        fontFamily: 'Open Sans',
+        // fontFamily: 'Open Sans',
         fontWeight: 'bold',
         textAlign: 'center',
     },
@@ -197,7 +196,11 @@ const styles = StyleSheet.create({
         fontSize: 34,
         fontWeight: '800',
     },
-    bookCountText: { color: '#b3b3b3', fontSize: 14, fontWeight: '500' },
+    bookCountText: {
+        color: '#b3b3b3',
+        fontSize: 14,
+        fontWeight: '500'
+    },
     infoMain: {
         marginTop: 10,
     },

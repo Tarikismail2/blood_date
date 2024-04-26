@@ -25,6 +25,9 @@
     },
     "web": {
       "favicon": "./assets/blood_splash.jpg"
-    }
+    },
+    "plugins": [
+      "expo-font"
+    ]
   }
 }

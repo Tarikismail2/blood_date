@@ -1,2 +1,2 @@
-const local='https://ff49-41-142-14-232.ngrok-free.app';
+const local='https://c55b-105-66-135-75.ngrok-free.app';
 export  default local;

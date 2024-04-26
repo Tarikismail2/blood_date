@@ -19,7 +19,6 @@ const Login = () => {
             email: email,
             password: password,
         };
-    
         axios.post(local + '/users/login-user', userData)
             .then(res => {
                 console.log(res.data.data);
